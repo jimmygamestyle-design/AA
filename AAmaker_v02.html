@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#26382f">
-<title>花筏 AA工房 v0.2</title>
+<title>AA工房 v0.4</title>
 <style>
 :root{font-family:system-ui,-apple-system,'Noto Sans JP',sans-serif;color:#22332b;background:#f6f8f4}
 *{box-sizing:border-box}body{margin:0;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}main{max-width:650px;margin:auto;padding:17px 14px 30px}
@@ -28,11 +28,48 @@ label{display:flex;align-items:center;gap:7px;font-size:13px;margin:10px 0}input
 .face-pills{margin:8px 0}.face-pills button{font-size:16px}.mini-head{font-size:13px;margin:17px 0 7px;color:#597163}
 #message{line-height:1.5}
 @media(min-width:550px){.template-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* 制作者からのメッセージ：本体機能には影響させない */
+.letter{margin-top:18px;border:1px solid #e8c6d7;border-radius:16px;background:linear-gradient(180deg,#fff9fc,#fff);padding:20px 17px;line-height:1.85}
+.letter h2{text-align:center;color:#b9477b;font-size:21px;margin:0 0 9px}
+.letter .slogan{text-align:center;font-weight:700;color:#744259;margin:0 0 17px}
+.letter p{font-size:14px;margin:11px 0}
+.letter .request{background:#fff0f7;border-radius:12px;padding:12px 14px;margin:16px 0}
+.letter .request h3{font-size:15px;color:#a3386d;margin:0 0 7px}
+.letter .request p{margin:0}
+.letter .closing{text-align:center;font-weight:700;color:#b9477b}
+.letter .credit{text-align:right;font-size:13px;color:#5d4e58;margin-top:16px}
+
+/* 色選択はゲームへ送る文字列だけを変更。文字サイズ指定は実装しない */
+.color-picker{display:block;margin:9px 0 6px;font-size:14px;font-weight:650;color:#245741}
+.color-picker select{display:block;width:100%;padding:11px 12px;margin-top:7px;border:1px solid #a8cbb6;background:#f5fff8;color:#223f32;border-radius:10px;font:inherit;min-height:44px}
+.color-note{margin:2px 0 12px;font-size:12px;line-height:1.55;color:#637368}
+/* 初心者向け：既存の制作機能や配置は変更しない */
+.guide{border:1px solid #c6ddce;border-left:4px solid #69a98a;background:#fcfffc}
+.guide h2{font-size:18px;color:#286b4b;margin-bottom:9px}
+.guide p{font-size:14px;margin:9px 0}
+.guide .easy{border-radius:10px;padding:10px 12px;background:#eaf8ef;color:#245741;font-size:14px;line-height:1.6}
+.guide-steps{padding-left:24px;margin:12px 0 10px}
+.guide-steps li{font-size:14px;line-height:1.6;padding-left:3px;margin:9px 0}
+.guide-steps strong{display:block;color:#2c5642}
+.guide .hint{font-size:12px;color:#64756c}
 </style>
 </head>
 <body><main>
-<h1>🌸 花筏 AA工房 <small>試作 v0.2</small></h1>
-<p class="sub">35種のベースと顔パーツからゲーム用AAを組み立てる、Android向け制作環境。インターネット接続・アカウント登録は不要です。</p>
+<h1>🌸 AA工房 <small>試作 v0.4</small></h1>
+<p class="sub">36種のベースと顔パーツからゲーム用AAを組み立てる、スマホ向け制作環境。アカウント登録は不要です。</p>
+<section class="guide" aria-labelledby="guide-title">
+  <h2 id="guide-title">🔰 はじめての方へ</h2>
+  <p><strong>AA（アスキーアート）</strong>は、文字や記号・絵文字を組み合わせて作るイラスト。聖霊伝説のチャットで、挨拶や応援に使ってみてね！</p>
+  <p class="easy"><strong>✨ 初めてなら、好きなAAを選んでコピーするだけでOK！</strong><br>自分で編集しなくても使えるよ。</p>
+  <ol class="guide-steps">
+    <li><strong>好きなAAを選ぼう</strong>下のカテゴリから好きな素材をタップ。</li>
+    <li><strong>自由にアレンジ（省略OK）</strong>顔・飾り・メッセージを好みで変更できるよ。</li>
+    <li><strong>「📋 ゲーム用をコピー」を押そう</strong>下に表示される文字数もチェックしてね。</li>
+    <li><strong>ゲームのチャットに貼り付けよう</strong>貼り付けて送信！ お友達への挨拶や応援にもどうぞ 🌸</li>
+  </ol>
+  <p class="hint">※ ゲームの入力上限は100文字相当。超えたら短くしてね。実際の表示は端末やゲーム内の仕様で異なる場合があります。</p>
+</section>
 <section>
 <h2>① ベースを選ぶ <small id="templateCount"></small></h2>
 <p class="hint">カテゴリを選んで素材を探そう。カードを押すと編集欄にセットされるよ。</p>
@@ -66,26 +103,49 @@ label{display:flex;align-items:center;gap:7px;font-size:13px;margin:10px 0}input
  しＪ 🌸</textarea>
 <h2 style="margin-top:15px">簡易プレビュー</h2>
 <div class="preview" id="preview" aria-live="polite"></div>
-<p class="hint">ここはスマホ側の表示例。ゲーム内と字幅・折り返し・絵文字の見た目が異なる場合があります。</p>
+<p class="hint">ここはスマホ側の表示例。色を付けてもゲーム内で同じ色・字幅になるとは限りません。絵文字の色は変更されません。</p>
 </section>
 <section>
 <h2>③ 聖霊伝説向けに変換</h2>
 <label><input type="checkbox" id="usep" checked> 各行に &lt;p&gt; を付ける（実改行なし）</label>
-<label><input type="checkbox" id="pink"> 全体をピンクにする（fontタグ／実験機能）</label>
+<label class="color-picker" for="colorMode">🎨 ゲーム内に貼るAAの文字色
+<select id="colorMode" aria-describedby="colorNote">
+  <option value="">標準（色指定なし）</option>
+  <option value="pink">ピンク（過去の一部条件で検証）</option>
+  <option value="red">赤（実験）</option>
+  <option value="blue">青（実験）</option>
+  <option value="green">緑（実験）</option>
+</select></label>
+<p class="color-note" id="colorNote">色指定は任意。タグの分だけ文字数が増えるよ。絵文字の色は変わらず、ゲーム内の表示は実機確認が必要です。</p>
 <label><input type="checkbox" id="escapeBrackets" checked> 半角 &lt; と &gt; を実体参照に置換</label>
 <div class="stat"><span id="count" class="count">0/100</span><span id="status" class="status"></span></div>
 <textarea id="output" class="out" readonly aria-label="ゲームへのコピー用文字列"></textarea>
 <div class="pills" style="margin-top:10px"><button type="button" class="primary" id="copy">📋 ゲーム用をコピー</button><button type="button" id="copyPlain">元のAAをコピー</button></div>
 <p id="message" role="status"></p>
-<p class="hint">文字数はJavaScriptのUTF-16単位で計算。100を超えたら短縮してね。タグを省略した書式と色の継続は、検証済みの一部条件を参考にしています。</p>
+<p class="hint">100文字はタグも含めてJavaScriptのUTF-16単位で計算。超えた作品はコピー前に短くしてね。色タグは従来のピンクと同じ方式ですが、ゲームでの色・継続範囲は実機で確認してください。</p>
 </section>
-<div class="warning">🔬 実験用：ゲーム内の描画パーサを完全再現するものではありません。Androidで作品ごとに送信後表示を確認してください。iPhoneでローカルHTMLを直接開く方式は未検証で、動かない場合があります。</div>
+<div class="warning">🔬 実験用：ゲーム内の描画パーサを完全再現するものではありません。Androidで作品ごとに送信後表示を確認してください。Web版はAndroidとiPhoneで利用報告がありますが、各機能やゲーム内表示は継続検証中です。iPhoneでローカルHTMLを直接開く方式は未検証です。</div>
 <p class="foot">ファイルに編集内容は自動保存しません。残したいAAは「元のAAをコピー」してメモに保管してください。</p>
+
+<section class="letter" aria-labelledby="creator-message-title">
+  <h2 id="creator-message-title">🌸 AA工房へようこそ 🌸</h2>
+  <p class="slogan">みんなでゲームをもっと楽しく！</p>
+  <p>最近、どこの道場も仲間が減って、少し寂しくなってきました。</p>
+  <p>そんな中でも、みんなが少しでも楽しく交流できたらと思い、このAA工房を作りました。</p>
+  <p>道場の垣根を越えて、挨拶したり、笑わせたり、自由に楽しんでもらえたら嬉しいです！😊</p>
+  <div class="request">
+    <h3>🌸 ちょっとしたお願い 🌸</h3>
+    <p>もし花筏道場と交流する機会があれば、皆さんが作ったAAをぜひ見せてください！</p>
+    <p>どんな作品が生まれるのか、楽しみにしています！😸</p>
+  </div>
+  <p class="closing">みんなでゲームを盛り上げよう！</p>
+  <p class="credit">制作：花筏道場 すらいむジミー</p>
+</section>
 </main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-const models=[{"category":"動物","name":"🍒 さくらんぼ猫","art":"🌸 /\\🍒/\\\n (｡•ω•｡)\n /つ❤️\n しＪ 🌸"},{"category":"動物","name":"🐈 おすまし猫","art":" /\\_/\\\n(｡･ω･｡)\n /つ🌸\n しーＪ"},{"category":"動物","name":"😼 ウインク猫","art":" /\\_/\\\n(｡•ᴗ\u003c｡)\n /つ❤️\n しＪ"},{"category":"動物","name":"🐱 ねむねむ猫","art":" /\\_/\\\n( ˘ω˘ )\n /つ☁\n しーＪ"},{"category":"動物","name":"🐰 お花ウサギ","art":"  (\\ (\\\n (｡•ㅅ•｡)\n /つ🌷\n しーＪ"},{"category":"動物","name":"🐰 うさぎのハート","art":" (\\ (\\\n(•ﻌ•)🌸\n /つ❤️\n しーＪ"},{"category":"動物","name":"🐻 はちみつクマ","art":" ∩＿∩\n(｡•㉨•｡)\n /つ🍯\n しーＪ"},{"category":"動物","name":"🐼 パンダ","art":" ∩＿∩\n(●ω●)\n /つ🎋\n しーＪ"},{"category":"動物","name":"🐸 カエル","art":" (･▽･)\n /つ🍀\n しーＪ"},{"category":"動物","name":"🐥 ひよこ","art":" (•ө•)\n /つ🌸\n しーＪ"},{"category":"動物","name":"🐹 ハムスター","art":" (｡•ᴥ•｡)\n /つ🍪\n しーＪ"},{"category":"動物","name":"🦊 きつね","art":" /\\_/\\\n(๑•ᴗ•๑)\n /つ🍎\n しーＪ"},{"category":"しぐさ","name":"❤️ ハートどうぞ","art":" (｡•ω•｡)\n /つ❤️\n しーＪ"},{"category":"しぐさ","name":"☕ お茶どうぞ","art":" (っ•ω•)っ☕\n ひと休み♪"},{"category":"しぐさ","name":"🙇 ぺこり","art":"  ∧_∧\n (｡_ _｡)\n  ぺこり🌸"},{"category":"しぐさ","name":"👋 手を振る","art":" ∧_∧\n(｡•ω•)ﾉ\n またね🌸"},{"category":"しぐさ","name":"💤 おやすみ","art":" /\\_/\\\n( ˘ω˘ ) zZ\n🌙また明日"},{"category":"しぐさ","name":"🎁 プレゼント","art":" ∧_∧\n(｡•ω•｡)\n /つ🎁\n しーＪ"},{"category":"しぐさ","name":"🎉 お祝い","art":" ＼(^ω^)／\n🎉 おめでとう 🎉"},{"category":"ネタ","name":"👀 ひょっこり","art":" ┃_∧\n ┃ω•｡)\n ┃⊂ﾉ 🌸\n ┃"},{"category":"ネタ","name":"🐙 追いかけっこ","art":"🐙💨  ε=ε=😼\n待って〜！"},{"category":"ネタ","name":"😴 ぐでー","art":" ( _ω_ )\n ⊂＿⊃  zZ"},{"category":"ネタ","name":"🍡 お団子","art":" (｡•ω•｡)\n /つ🍡\n もぐもぐ"},{"category":"ネタ","name":"💕 ハート大量","art":"(っ•ω•)っ💕💕\n 受け取って！"},{"category":"ネタ","name":"✨ キラキラ","art":"✧･ﾟ(｡•ω•｡)･ﾟ✧\n きらーん"},{"category":"装飾","name":"🌸 花筏ライン","art":"🌸｡･ﾟﾟ･｡🌸｡･ﾟﾟ･｡🌸"},{"category":"装飾","name":"💗 ハート枠","art":"♡･ﾟ♡･ﾟ♡･ﾟ♡\n  ここに文字\n♡･ﾟ♡･ﾟ♡･ﾟ♡"},{"category":"装飾","name":"⭐ 星の飾り","art":"✧･ﾟ: *✧･ﾟ:*\n ここに文字\n*:･ﾟ✧*:･ﾟ✧"},{"category":"装飾","name":"🎀 リボン","art":"୨୧ ─── ୨୧\n ここに文字\n୨୧ ─── ୨୧"},{"category":"装飾","name":"🌷 お花畑","art":"🌸🌷🌼🌷🌸\n ここに文字\n🌸🌷🌼🌷🌸"},{"category":"メッセージ","name":"🌸 花筏の挨拶","art":"🌸｡･ﾟﾟ･｡🌸\n1週間\nよろしくお願いします\n花筏一同より\n🌸｡･ﾟﾟ･｡🌸"},{"category":"メッセージ","name":"☀️ おはよう","art":"🌸 おはよう 🌸\n今日もよろしくね♪"},{"category":"メッセージ","name":"🌙 おやすみ","art":"🌙 今日もお疲れさま\nまた明日ね♪ 🌸"},{"category":"メッセージ","name":"🙏 ありがとう","art":"🌸 ありがとう 🌸\n(｡•ᴗ•｡)♡"},{"category":"メッセージ","name":"🍵 休憩中","art":"(っ•ω•)っ🍵\nちょっと休憩♪"}];
+const models=[{"category":"動物","name":"🍒 さくらんぼ猫","art":"🌸 /\\🍒/\\\n (｡•ω•｡)\n /つ❤️\n しＪ 🌸"},{"category":"動物","name":"🐈 おすまし猫","art":" /\\_/\\\n(｡･ω･｡)\n /つ🌸\n しーＪ"},{"category":"動物","name":"😼 ウインク猫","art":" /\\_/\\\n(｡•ᴗ<｡)\n /つ❤️\n しＪ"},{"category":"動物","name":"🐱 ねむねむ猫","art":" /\\_/\\\n( ˘ω˘ )\n /つ☁\n しーＪ"},{"category":"動物","name":"🐰 お花ウサギ","art":"  (\\ (\\\n (｡•ㅅ•｡)\n /つ🌷\n しーＪ"},{"category":"動物","name":"🐰 うさぎのハート","art":" (\\ (\\\n(•ﻌ•)🌸\n /つ❤️\n しーＪ"},{"category":"動物","name":"🐻 はちみつクマ","art":" ∩＿∩\n(｡•㉨•｡)\n /つ🍯\n しーＪ"},{"category":"動物","name":"🐼 パンダ","art":" ∩＿∩\n(●ω●)\n /つ🎋\n しーＪ"},{"category":"動物","name":"🐸 カエル","art":" (･▽･)\n /つ🍀\n しーＪ"},{"category":"動物","name":"🐥 ひよこ","art":" (•ө•)\n /つ🌸\n しーＪ"},{"category":"動物","name":"🐹 ハムスター","art":" (｡•ᴥ•｡)\n /つ🍪\n しーＪ"},{"category":"動物","name":"🦊 きつね","art":" /\\_/\\\n(๑•ᴗ•๑)\n /つ🍎\n しーＪ"},{"category":"しぐさ","name":"❤️ ハートどうぞ","art":" (｡•ω•｡)\n /つ❤️\n しーＪ"},{"category":"しぐさ","name":"☕ お茶どうぞ","art":" (っ•ω•)っ☕\n ひと休み♪"},{"category":"しぐさ","name":"🙇 ぺこり","art":"  ∧_∧\n (｡_ _｡)\n  ぺこり🌸"},{"category":"しぐさ","name":"👋 手を振る","art":" ∧_∧\n(｡•ω•)ﾉ\n またね🌸"},{"category":"しぐさ","name":"💤 おやすみ","art":" /\\_/\\\n( ˘ω˘ ) zZ\n🌙また明日"},{"category":"しぐさ","name":"🎁 プレゼント","art":" ∧_∧\n(｡•ω•｡)\n /つ🎁\n しーＪ"},{"category":"しぐさ","name":"🎉 お祝い","art":" ＼(^ω^)／\n🎉 おめでとう 🎉"},{"category":"ネタ","name":"👀 ひょっこり","art":" ┃_∧\n ┃ω•｡)\n ┃⊂ﾉ 🌸\n ┃"},{"category":"ネタ","name":"🐙 追いかけっこ","art":"🐙💨  ε=ε=😼\n待って〜！"},{"category":"ネタ","name":"😴 ぐでー","art":" ( _ω_ )\n ⊂＿⊃  zZ"},{"category":"ネタ","name":"🍡 お団子","art":" (｡•ω•｡)\n /つ🍡\n もぐもぐ"},{"category":"ネタ","name":"💕 ハート大量","art":"(っ•ω•)っ💕💕\n 受け取って！"},{"category":"ネタ","name":"✨ キラキラ","art":"✧･ﾟ(｡•ω•｡)･ﾟ✧\n きらーん"},{"category":"装飾","name":"🌸 さくらライン","art":"🌸｡･ﾟﾟ･｡🌸｡･ﾟﾟ･｡🌸"},{"category":"装飾","name":"💗 ハート枠","art":"♡･ﾟ♡･ﾟ♡･ﾟ♡\n  ここに文字\n♡･ﾟ♡･ﾟ♡･ﾟ♡"},{"category":"装飾","name":"⭐ 星の飾り","art":"✧･ﾟ: *✧･ﾟ:*\n ここに文字\n*:･ﾟ✧*:･ﾟ✧"},{"category":"装飾","name":"🎀 リボン","art":"୨୧ ─── ୨୧\n ここに文字\n୨୧ ─── ୨୧"},{"category":"装飾","name":"🌷 お花畑","art":"🌸🌷🌼🌷🌸\n ここに文字\n🌸🌷🌼🌷🌸"},{"category":"メッセージ","name":"🌸 みんなの挨拶","art":"🌸｡･ﾟﾟ･｡🌸\n1週間\nよろしくお願いします\nみんなで楽しもう！\n🌸｡･ﾟﾟ･｡🌸"},{"category":"メッセージ","name":"☀️ おはよう","art":"🌸 おはよう 🌸\n今日もよろしくね♪"},{"category":"メッセージ","name":"🌙 おやすみ","art":"🌙 今日もお疲れさま\nまた明日ね♪ 🌸"},{"category":"メッセージ","name":"🙏 ありがとう","art":"🌸 ありがとう 🌸\n(｡•ᴗ•｡)♡"},{"category":"メッセージ","name":"🍵 休憩中","art":"(っ•ω•)っ🍵\nちょっと休憩♪"},{"category":"メッセージ","name":"📣 みんな頑張ろう！","art":" ∧_∧\n(｡•ω•)و\n /つ🌸\nみんな頑張ろう！"}];
 const faces=['(｡•ω•｡)','(｡•ᴗ•｡)','( ˘ω˘ )','(｡>ω<｡)','(｡•㉨•｡)','(•ﻌ•)','(｡_ _｡)','(●ω●)'];
 let activeCategory='動物', selectedTemplate=null;
 const groups=['動物','しぐさ','ネタ','装飾','メッセージ'];
@@ -93,7 +153,9 @@ function compiled(raw){
  const lines=raw.replace(/\r\n/g,'\n').split('\n');
  const escape=s=>$('escapeBrackets').checked?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):s;
  let result=lines.map(s=>($('usep').checked?'<p>':'')+(s===''&&$('usep').checked?'　':escape(s))).join($('usep').checked?'':'\n');
- if($('pink').checked)result=($('usep').checked?'<p><font color="pink">':'<font color="pink">')+($('usep').checked?result.replace(/^<p>/,''):result);
+ const color=$('colorMode').value;
+ if(color){const tag='<font color="'+color+'">';result=($('usep').checked?'<p>'+tag:tag)+($('usep').checked?result.replace(/^<p>/,''):result);}
+ // 既存のピンク設定と同じタグ生成方式を維持し、表示互換性を実機で確認する。
  return result;
 }
 function renderCategories(){
@@ -129,6 +191,8 @@ function renderFaces(){
 function make(){
  const raw=$('editor').value;
  $('preview').textContent=raw;
+ const previewColors={pink:'#cf4b8e',red:'#d33a3a',blue:'#246dc9',green:'#26834b'};
+ $('preview').style.color=previewColors[$('colorMode').value]||'#293a42';
  let result=compiled(raw);
  $('output').value=result;
  const n=result.length; $('count').textContent=n+'/100';
@@ -140,7 +204,7 @@ for(const b of document.querySelectorAll('[data-insert]'))b.addEventListener('cl
  el.value=el.value.slice(0,a)+v+el.value.slice(c);el.focus();el.setSelectionRange(a+v.length,a+v.length);make();
 });
 $('editor').addEventListener('input',()=>{selectedTemplate=null;make();renderTemplates();});
-for(const id of ['usep','pink','escapeBrackets'])$(id).addEventListener('change',()=>{make();renderTemplates();});
+for(const id of ['usep','colorMode','escapeBrackets'])$(id).addEventListener('change',()=>{make();renderTemplates();});
 async function copyText(value){
  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);$('message').textContent='コピーしたよ！';return;}}catch(e){}
  const temp=document.createElement('textarea');temp.value=value;temp.style.position='fixed';temp.style.top='0';temp.style.left='0';document.body.appendChild(temp);temp.focus();temp.select();
