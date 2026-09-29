@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#26382f">
+<title>花筏 AA工房 v0.2</title>
+<style>
+:root{font-family:system-ui,-apple-system,'Noto Sans JP',sans-serif;color:#22332b;background:#f6f8f4}
+*{box-sizing:border-box}body{margin:0;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}main{max-width:650px;margin:auto;padding:17px 14px 30px}
+h1{margin:0;font-size:24px;color:#246046}h1 small{font-size:12px;font-weight:400;color:#587368}p{line-height:1.6} .sub{font-size:13px;color:#58665f;margin:8px 0 20px}
+section{background:#fff;border:1px solid #e3e9e1;border-radius:16px;padding:15px;margin:13px 0;box-shadow:0 5px 19px #334d2510}
+section h2{font-size:16px;margin:0 0 11px}small,.hint{color:#64756c;font-size:12px;line-height:1.55}
+button{border:1px solid #adcdbc;border-radius:10px;background:#f4fff9;color:#245741;padding:11px 12px;font:inherit;cursor:pointer;min-height:42px;font-weight:600}
+button:active{background:#d8f1e4}button.primary{background:#286b4b;color:white;border-color:#286b4b}
+.pills{display:flex;flex-wrap:wrap;gap:8px}textarea{display:block;width:100%;border:1px solid #bfcdc1;border-radius:10px;padding:12px;font:16px/1.65 ui-monospace,Consolas,'Noto Sans Mono',monospace;resize:vertical;min-height:162px;color:#203c2c;background:#fdfefc;tab-size:2}textarea:focus{outline:2px solid #9ed9b6}
+.preview{background:#e9f7fa;border:1px solid #b9d5e1;border-radius:15px;padding:14px;margin:10px 0;min-height:125px;overflow-x:auto;text-align:left;white-space:pre-wrap;font:18px/1.65 system-ui,'Noto Sans JP',sans-serif;overflow-wrap:anywhere;color:#293a42}
+.stat{display:flex;align-items:center;gap:9px;margin-bottom:10px}.count{border-radius:999px;padding:5px 10px;background:#eef5ef;font-weight:800;color:#2b7453}.count.bad{background:#fff0ef;color:#a43e30}.status{font-size:13px;font-weight:600;color:#53715d}.status.bad{color:#a43e30}
+label{display:flex;align-items:center;gap:7px;font-size:13px;margin:10px 0}input[type=checkbox]{width:18px;height:18px;accent-color:#3b9266}
+.out{min-height:115px;font-size:13px;line-height:1.45;overflow-wrap:anywhere;word-break:break-all}.foot{font-size:12px;color:#65766c}
+.warning{border-left:4px solid #c39e5f;padding:9px 11px;background:#fff9eb;font-size:12px;line-height:1.5;border-radius:7px}#message{min-height:20px;color:#2f7754;font-size:13px;font-weight:600}
+.categories{margin-bottom:12px;gap:6px}.categories button{padding:8px 11px;min-height:38px;font-size:13px}.categories button.selected{background:#286b4b;color:white;border-color:#286b4b}
+.template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.template-card{width:100%;background:#fafdfb;border:1px solid #c6ddce;text-align:left;min-height:95px;display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:10px 9px}
+.template-card.selected{outline:2px solid #338d5d;background:#eefbf1}
+.template-card .name{font-size:13px}.template-card .mini-art{font:13px/1.2 system-ui,sans-serif;white-space:pre;min-height:30px;overflow:hidden;text-overflow:ellipsis;color:#314c41}
+.template-card .small-count{font-size:10px;color:#66796e;font-weight:400}.template-card .too-long{color:#ac473d}
+.face-pills{margin:8px 0}.face-pills button{font-size:16px}.mini-head{font-size:13px;margin:17px 0 7px;color:#597163}
+#message{line-height:1.5}
+@media(min-width:550px){.template-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body><main>
+<h1>🌸 花筏 AA工房 <small>試作 v0.2</small></h1>
+<p class="sub">35種のベースと顔パーツからゲーム用AAを組み立てる、Android向け制作環境。インターネット接続・アカウント登録は不要です。</p>
+<section>
+<h2>① ベースを選ぶ <small id="templateCount"></small></h2>
+<p class="hint">カテゴリを選んで素材を探そう。カードを押すと編集欄にセットされるよ。</p>
+<div class="pills categories" id="categories" role="group" aria-label="素材のカテゴリ"></div>
+<div class="template-grid" id="templates"></div>
+<p class="hint">オリジナルの試作用素材。すべてゲーム内表示は未検証。表示と字幅は実機で確認してね。</p>
+</section>
+<section>
+<h2>② 自由に編集する</h2>
+<p class="hint">顔だけ交換することもできるよ。顔の行が見つからない場合は、編集欄のカーソル位置に挿入するよ。</p>
+<div class="pills face-pills" id="faces"></div>
+<h3 class="mini-head">飾りを挿入</h3>
+<div class="pills" id="insert">
+<button type="button" data-insert="🌸">🌸</button>
+<button type="button" data-insert="🍒">🍒</button>
+<button type="button" data-insert="❤️">❤️</button>
+<button type="button" data-insert="🍯">🍯</button>
+<button type="button" data-insert="☕">☕</button>
+<button type="button" data-insert="😽">😽</button>
+<button type="button" data-insert="✧">✧</button>
+<button type="button" data-insert="🌷">🌷</button>
+<button type="button" data-insert="🎀">🎀</button>
+<button type="button" data-insert="🐾">🐾</button>
+<button type="button" data-insert="♡">♡</button>
+<button type="button" data-insert="　">全角空白</button>
+</div>
+<p class="hint">カーソル位置に飾りを挿入できるよ。改行で段を分けてね。</p>
+<textarea id="editor" spellcheck="false" aria-label="AA編集欄">🌸 /\🍒/\
+ (｡•ω•｡)
+ /つ❤️
+ しＪ 🌸</textarea>
+<h2 style="margin-top:15px">簡易プレビュー</h2>
+<div class="preview" id="preview" aria-live="polite"></div>
+<p class="hint">ここはスマホ側の表示例。ゲーム内と字幅・折り返し・絵文字の見た目が異なる場合があります。</p>
+</section>
+<section>
+<h2>③ 聖霊伝説向けに変換</h2>
+<label><input type="checkbox" id="usep" checked> 各行に &lt;p&gt; を付ける（実改行なし）</label>
+<label><input type="checkbox" id="pink"> 全体をピンクにする（fontタグ／実験機能）</label>
+<label><input type="checkbox" id="escapeBrackets" checked> 半角 &lt; と &gt; を実体参照に置換</label>
+<div class="stat"><span id="count" class="count">0/100</span><span id="status" class="status"></span></div>
+<textarea id="output" class="out" readonly aria-label="ゲームへのコピー用文字列"></textarea>
+<div class="pills" style="margin-top:10px"><button type="button" class="primary" id="copy">📋 ゲーム用をコピー</button><button type="button" id="copyPlain">元のAAをコピー</button></div>
+<p id="message" role="status"></p>
+<p class="hint">文字数はJavaScriptのUTF-16単位で計算。100を超えたら短縮してね。タグを省略した書式と色の継続は、検証済みの一部条件を参考にしています。</p>
+</section>
+<div class="warning">🔬 実験用：ゲーム内の描画パーサを完全再現するものではありません。Androidで作品ごとに送信後表示を確認してください。iPhoneでローカルHTMLを直接開く方式は未検証で、動かない場合があります。</div>
+<p class="foot">ファイルに編集内容は自動保存しません。残したいAAは「元のAAをコピー」してメモに保管してください。</p>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const models=[{"category":"動物","name":"🍒 さくらんぼ猫","art":"🌸 /\\🍒/\\\n (｡•ω•｡)\n /つ❤️\n しＪ 🌸"},{"category":"動物","name":"🐈 おすまし猫","art":" /\\_/\\\n(｡･ω･｡)\n /つ🌸\n しーＪ"},{"category":"動物","name":"😼 ウインク猫","art":" /\\_/\\\n(｡•ᴗ\u003c｡)\n /つ❤️\n しＪ"},{"category":"動物","name":"🐱 ねむねむ猫","art":" /\\_/\\\n( ˘ω˘ )\n /つ☁\n しーＪ"},{"category":"動物","name":"🐰 お花ウサギ","art":"  (\\ (\\\n (｡•ㅅ•｡)\n /つ🌷\n しーＪ"},{"category":"動物","name":"🐰 うさぎのハート","art":" (\\ (\\\n(•ﻌ•)🌸\n /つ❤️\n しーＪ"},{"category":"動物","name":"🐻 はちみつクマ","art":" ∩＿∩\n(｡•㉨•｡)\n /つ🍯\n しーＪ"},{"category":"動物","name":"🐼 パンダ","art":" ∩＿∩\n(●ω●)\n /つ🎋\n しーＪ"},{"category":"動物","name":"🐸 カエル","art":" (･▽･)\n /つ🍀\n しーＪ"},{"category":"動物","name":"🐥 ひよこ","art":" (•ө•)\n /つ🌸\n しーＪ"},{"category":"動物","name":"🐹 ハムスター","art":" (｡•ᴥ•｡)\n /つ🍪\n しーＪ"},{"category":"動物","name":"🦊 きつね","art":" /\\_/\\\n(๑•ᴗ•๑)\n /つ🍎\n しーＪ"},{"category":"しぐさ","name":"❤️ ハートどうぞ","art":" (｡•ω•｡)\n /つ❤️\n しーＪ"},{"category":"しぐさ","name":"☕ お茶どうぞ","art":" (っ•ω•)っ☕\n ひと休み♪"},{"category":"しぐさ","name":"🙇 ぺこり","art":"  ∧_∧\n (｡_ _｡)\n  ぺこり🌸"},{"category":"しぐさ","name":"👋 手を振る","art":" ∧_∧\n(｡•ω•)ﾉ\n またね🌸"},{"category":"しぐさ","name":"💤 おやすみ","art":" /\\_/\\\n( ˘ω˘ ) zZ\n🌙また明日"},{"category":"しぐさ","name":"🎁 プレゼント","art":" ∧_∧\n(｡•ω•｡)\n /つ🎁\n しーＪ"},{"category":"しぐさ","name":"🎉 お祝い","art":" ＼(^ω^)／\n🎉 おめでとう 🎉"},{"category":"ネタ","name":"👀 ひょっこり","art":" ┃_∧\n ┃ω•｡)\n ┃⊂ﾉ 🌸\n ┃"},{"category":"ネタ","name":"🐙 追いかけっこ","art":"🐙💨  ε=ε=😼\n待って〜！"},{"category":"ネタ","name":"😴 ぐでー","art":" ( _ω_ )\n ⊂＿⊃  zZ"},{"category":"ネタ","name":"🍡 お団子","art":" (｡•ω•｡)\n /つ🍡\n もぐもぐ"},{"category":"ネタ","name":"💕 ハート大量","art":"(っ•ω•)っ💕💕\n 受け取って！"},{"category":"ネタ","name":"✨ キラキラ","art":"✧･ﾟ(｡•ω•｡)･ﾟ✧\n きらーん"},{"category":"装飾","name":"🌸 花筏ライン","art":"🌸｡･ﾟﾟ･｡🌸｡･ﾟﾟ･｡🌸"},{"category":"装飾","name":"💗 ハート枠","art":"♡･ﾟ♡･ﾟ♡･ﾟ♡\n  ここに文字\n♡･ﾟ♡･ﾟ♡･ﾟ♡"},{"category":"装飾","name":"⭐ 星の飾り","art":"✧･ﾟ: *✧･ﾟ:*\n ここに文字\n*:･ﾟ✧*:･ﾟ✧"},{"category":"装飾","name":"🎀 リボン","art":"୨୧ ─── ୨୧\n ここに文字\n୨୧ ─── ୨୧"},{"category":"装飾","name":"🌷 お花畑","art":"🌸🌷🌼🌷🌸\n ここに文字\n🌸🌷🌼🌷🌸"},{"category":"メッセージ","name":"🌸 花筏の挨拶","art":"🌸｡･ﾟﾟ･｡🌸\n1週間\nよろしくお願いします\n花筏一同より\n🌸｡･ﾟﾟ･｡🌸"},{"category":"メッセージ","name":"☀️ おはよう","art":"🌸 おはよう 🌸\n今日もよろしくね♪"},{"category":"メッセージ","name":"🌙 おやすみ","art":"🌙 今日もお疲れさま\nまた明日ね♪ 🌸"},{"category":"メッセージ","name":"🙏 ありがとう","art":"🌸 ありがとう 🌸\n(｡•ᴗ•｡)♡"},{"category":"メッセージ","name":"🍵 休憩中","art":"(っ•ω•)っ🍵\nちょっと休憩♪"}];
+const faces=['(｡•ω•｡)','(｡•ᴗ•｡)','( ˘ω˘ )','(｡>ω<｡)','(｡•㉨•｡)','(•ﻌ•)','(｡_ _｡)','(●ω●)'];
+let activeCategory='動物', selectedTemplate=null;
+const groups=['動物','しぐさ','ネタ','装飾','メッセージ'];
+function compiled(raw){
+ const lines=raw.replace(/\r\n/g,'\n').split('\n');
+ const escape=s=>$('escapeBrackets').checked?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):s;
+ let result=lines.map(s=>($('usep').checked?'<p>':'')+(s===''&&$('usep').checked?'　':escape(s))).join($('usep').checked?'':'\n');
+ if($('pink').checked)result=($('usep').checked?'<p><font color="pink">':'<font color="pink">')+($('usep').checked?result.replace(/^<p>/,''):result);
+ return result;
+}
+function renderCategories(){
+ const root=$('categories');root.replaceChildren();
+ for(const c of groups){const b=document.createElement('button');b.type='button';b.textContent=c+' '+models.filter(x=>x.category===c).length;
+  b.classList.toggle('selected',c===activeCategory);b.setAttribute('aria-pressed',String(c===activeCategory));
+  b.addEventListener('click',()=>{activeCategory=c;renderCategories();renderTemplates();});root.appendChild(b);}
+}
+function renderTemplates(){
+ const root=$('templates');root.replaceChildren();const filtered=models.filter(x=>x.category===activeCategory);
+ $('templateCount').textContent='（全'+models.length+'種類）';
+ for(const m of filtered){
+  const b=document.createElement('button');b.type='button';b.className='template-card';b.classList.toggle('selected',m.name===selectedTemplate);
+  const name=document.createElement('strong');name.className='name';name.textContent=m.name;
+  const art=document.createElement('span');art.className='mini-art';art.textContent=m.art.split('\n').slice(0,2).join('\n');
+  const count=document.createElement('span');count.className='small-count';const n=compiled(m.art).length;count.textContent=n+'/100（現在の設定）';count.classList.toggle('too-long',n>100);
+  b.append(name,art,count);b.addEventListener('click',()=>{selectedTemplate=m.name;$('editor').value=m.art;make();renderTemplates();$('editor').scrollIntoView({behavior:'smooth',block:'center'});});root.appendChild(b);
+ }
+}
+function renderFaces(){
+ const root=$('faces');root.replaceChildren();
+ for(const face of faces){const b=document.createElement('button');b.type='button';b.textContent=face;b.title='顔を入れ替え';
+  b.addEventListener('click',()=>{
+   const el=$('editor'),v=el.value;
+   // Select a whole face segment, avoiding an ear-shaped first line.
+   const match=v.match(/\([^()\n]{1,24}[ωᴗ㉨ﻌᵕ▽_•>]+[^()\n]{0,24}\)/u);
+   if(match){const pos=match.index;el.value=v.slice(0,pos)+face+v.slice(pos+match[0].length);$('message').textContent='顔を入れ替えたよ。仕上がりはプレビューとゲーム内で確認してね。';}
+   else{const a=el.selectionStart,c=el.selectionEnd;el.value=v.slice(0,a)+face+v.slice(c);el.setSelectionRange(a+face.length,a+face.length);$('message').textContent='顔の行が見つからなかったため、カーソル位置に追加したよ。';}
+   selectedTemplate=null;make();el.focus();renderTemplates();
+  });root.appendChild(b);
+ }
+}
+function make(){
+ const raw=$('editor').value;
+ $('preview').textContent=raw;
+ let result=compiled(raw);
+ $('output').value=result;
+ const n=result.length; $('count').textContent=n+'/100';
+ $('count').classList.toggle('bad',n>100); $('status').classList.toggle('bad',n>100);
+ $('status').textContent=n>100?'⚠ '+(n-100)+'単位オーバー':n>90?'あと '+(100-n)+'単位':'あと '+(100-n)+'単位';
+}
+for(const b of document.querySelectorAll('[data-insert]'))b.addEventListener('click',()=>{
+ const el=$('editor'),a=el.selectionStart,c=el.selectionEnd,v=b.dataset.insert;
+ el.value=el.value.slice(0,a)+v+el.value.slice(c);el.focus();el.setSelectionRange(a+v.length,a+v.length);make();
+});
+$('editor').addEventListener('input',()=>{selectedTemplate=null;make();renderTemplates();});
+for(const id of ['usep','pink','escapeBrackets'])$(id).addEventListener('change',()=>{make();renderTemplates();});
+async function copyText(value){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);$('message').textContent='コピーしたよ！';return;}}catch(e){}
+ const temp=document.createElement('textarea');temp.value=value;temp.style.position='fixed';temp.style.top='0';temp.style.left='0';document.body.appendChild(temp);temp.focus();temp.select();
+ let success=false;try{success=document.execCommand('copy');}catch(e){}
+ temp.remove();
+ if(success){$('message').textContent='コピーしたよ！';}else{$('output').value=value;$('output').focus();$('output').select();$('message').textContent='自動コピーが使えないため、選択された文字を手動でコピーしてね。';}
+}
+$('copy').addEventListener('click',()=>{const val=$('output').value;if(val.length>100){$('message').textContent='100単位を超えているよ。短くしてから送信してね。';return;}copyText(val);});
+$('copyPlain').addEventListener('click',()=>copyText($('editor').value));
+renderCategories();renderFaces();make();renderTemplates();
+</script>
+</body></html>
