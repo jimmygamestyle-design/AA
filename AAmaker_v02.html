@@ -97,6 +97,7 @@ label{display:flex;align-items:center;gap:7px;font-size:13px;margin:10px 0}input
 <button type="button" data-insert="　">全角空白</button>
 </div>
 <p class="hint">カーソル位置に飾りを挿入できるよ。改行で段を分けてね。</p>
+<div class="pills" style="margin-bottom:10px"><button type="button" id="clearEditor">🧹 編集中のAAをクリア</button></div>
 <textarea id="editor" spellcheck="false" aria-label="AA編集欄">🌸 /\🍒/\
  (｡•ω•｡)
  /つ❤️
@@ -193,7 +194,7 @@ function make(){
  $('preview').textContent=raw;
  const previewColors={pink:'#cf4b8e',red:'#d33a3a',blue:'#246dc9',green:'#26834b'};
  $('preview').style.color=previewColors[$('colorMode').value]||'#293a42';
- let result=compiled(raw);
+ let result=raw===''?'':compiled(raw);
  $('output').value=result;
  const n=result.length; $('count').textContent=n+'/100';
  $('count').classList.toggle('bad',n>100); $('status').classList.toggle('bad',n>100);
@@ -202,6 +203,10 @@ function make(){
 for(const b of document.querySelectorAll('[data-insert]'))b.addEventListener('click',()=>{
  const el=$('editor'),a=el.selectionStart,c=el.selectionEnd,v=b.dataset.insert;
  el.value=el.value.slice(0,a)+v+el.value.slice(c);el.focus();el.setSelectionRange(a+v.length,a+v.length);make();
+});
+$('clearEditor').addEventListener('click',()=>{
+ $('editor').value='';selectedTemplate=null;make();renderTemplates();
+ $('message').textContent='編集中のAAをクリアしたよ。';
 });
 $('editor').addEventListener('input',()=>{selectedTemplate=null;make();renderTemplates();});
 for(const id of ['usep','colorMode','escapeBrackets'])$(id).addEventListener('change',()=>{make();renderTemplates();});
